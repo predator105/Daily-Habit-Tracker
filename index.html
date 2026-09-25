@@ -152,6 +152,324 @@
 
         ];
 
+        /* =====================================================
+   PUNISHMENT / CORRECTION SYSTEM
+===================================================== */
+
+const punishments = {
+
+    warning: {
+        title: "CORRECTION REQUIRED",
+        message: "Your score dropped below 35. Correct the day before you finish.",
+        tasks: [
+            "Complete your most important planned task today."
+        ]
+    },
+
+    correction: {
+        title: "MUST DO",
+        message: "Your score dropped below 30. You need to recover before ending the day.",
+        tasks: [
+            "Complete 30 minutes of focused work.",
+            "Complete 1 career or networking action.",
+            "Write tomorrow's first important task."
+        ]
+    },
+
+    reset: {
+        title: "RESET REQUIRED",
+        message: "Your score dropped below 25. Stop the slide and force a recovery session.",
+        tasks: [
+            "Complete 60 minutes of focused work.",
+            "Complete 1 client, networking or career action.",
+            "Prepare tomorrow's first important task.",
+            "Keep your phone away during the focused work session."
+        ]
+    }
+
+};
+
+
+/* =====================================================
+   GET PUNISHMENT LEVEL
+===================================================== */
+
+function getPunishmentLevel(score) {
+
+    if (score >= 35) {
+        return null;
+    }
+
+    if (score >= 30) {
+        return "warning";
+    }
+
+    if (score >= 25) {
+        return "correction";
+    }
+
+    return "reset";
+}
+
+
+/* =====================================================
+   GET CURRENT PUNISHMENT
+===================================================== */
+
+function getCurrentPunishment(date) {
+
+    const score = calculateScore(date);
+
+    const level = getPunishmentLevel(score);
+
+    if (!level) {
+        return null;
+    }
+
+    const day = getDay(date);
+
+    if (!day.punishment) {
+
+        day.punishment = {
+            level: level,
+            completed: false,
+            tasks: {}
+        };
+
+    }
+
+    /*
+       If the score becomes worse, upgrade the punishment.
+    */
+
+    const levels = {
+        warning: 1,
+        correction: 2,
+        reset: 3
+    };
+
+    if (
+        levels[level] >
+        levels[day.punishment.level]
+    ) {
+
+        day.punishment.level = level;
+
+        day.punishment.completed = false;
+
+        day.punishment.tasks = {};
+
+    }
+
+    return day.punishment;
+}
+
+
+/* =====================================================
+   TOGGLE PUNISHMENT TASK
+===================================================== */
+
+function togglePunishmentTask(index) {
+
+    const punishment =
+        getCurrentPunishment(selectedDate);
+
+    if (!punishment) return;
+
+    punishment.tasks[index] =
+        !punishment.tasks[index];
+
+    checkPunishmentComplete();
+
+    saveData();
+
+    renderToday();
+
+}
+
+
+/* =====================================================
+   CHECK IF ALL TASKS ARE COMPLETE
+===================================================== */
+
+function checkPunishmentComplete() {
+
+    const punishment =
+        getCurrentPunishment(selectedDate);
+
+    if (!punishment) return;
+
+    const tasks =
+        punishments[punishment.level].tasks;
+
+    const completed =
+        tasks.every(
+            (_, index) =>
+                punishment.tasks[index] === true
+        );
+
+    punishment.completed = completed;
+
+}
+
+
+/* =====================================================
+   GET PUNISHMENT HTML
+===================================================== */
+
+function renderPunishment() {
+
+    const score =
+        calculateScore(selectedDate);
+
+    const level =
+        getPunishmentLevel(score);
+
+    if (!level) {
+
+        return "";
+
+    }
+
+
+    const punishment =
+        getCurrentPunishment(selectedDate);
+
+    const data =
+        punishments[level];
+
+
+    const completedCount =
+        data.tasks.filter(
+            (_, index) =>
+                punishment.tasks[index]
+        ).length;
+
+
+    const totalTasks =
+        data.tasks.length;
+
+
+    let html = `
+
+        <section class="punishment-card ${level}">
+
+            <div class="punishment-header">
+
+                <div>
+
+                    <div class="punishment-badge">
+                        ${data.title}
+                    </div>
+
+                    <h2>
+                        You need to recover this day.
+                    </h2>
+
+                </div>
+
+                <div class="punishment-counter">
+                    ${completedCount}/${totalTasks}
+                </div>
+
+            </div>
+
+
+            <p class="punishment-message">
+                ${data.message}
+            </p>
+
+
+            <div class="punishment-tasks">
+    `;
+
+
+    data.tasks.forEach(
+        (task, index) => {
+
+            const checked =
+                punishment.tasks[index] === true;
+
+
+            html += `
+
+                <button
+                    class="punishment-task ${
+                        checked ? "completed" : ""
+                    }"
+                    onclick="togglePunishmentTask(${index})">
+
+                    <span class="task-checkbox">
+                        ${checked ? "✓" : ""}
+                    </span>
+
+                    <span class="task-text">
+                        ${task}
+                    </span>
+
+                </button>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </div>
+
+
+            <div class="punishment-progress">
+
+                <div class="progress-container">
+
+                    <div
+                        class="progress-bar"
+                        style="width: ${
+                            (completedCount / totalTasks) * 100
+                        }%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            ${
+                punishment.completed
+
+                ?
+
+                `
+                    <div class="punishment-complete">
+
+                        ✓ RECOVERY COMPLETE
+
+                    </div>
+                `
+
+                :
+
+                `
+                    <div class="punishment-warning">
+
+                        Complete every task before marking
+                        today's correction complete.
+
+                    </div>
+                `
+
+            }
+
+        </section>
+
+    `;
+
+
+    return html;
+
+}
 
         /* =====================================================
            STORAGE
@@ -481,7 +799,7 @@
 
                 </div>
 
-
+                ${renderPunishment()}
                 <div class="date-navigation">
 
                     <button onclick="changeDate(-1)">

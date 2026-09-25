@@ -1,0 +1,1115 @@
+/* =========================================================
+   50 POINT ACCOUNTABILITY — DARK GLASS UI
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    /* Main colors */
+    --bg: #0b0d10;
+    --bg-deep: #07090c;
+
+    /* Glass navy cards */
+    --card: rgba(15, 27, 48, 0.78);
+    --card-light: rgba(22, 39, 66, 0.82);
+    --card-hover: rgba(27, 48, 80, 0.9);
+
+    --border: rgba(92, 137, 190, 0.22);
+    --border-strong: rgba(92, 137, 190, 0.38);
+
+    /* Text */
+    --white: #ffffff;
+    --text: #f5f7fa;
+    --text-secondary: #b9c2ce;
+    --text-muted: #788392;
+
+    /* Blood red */
+    --red: #e32632;
+    --red-bright: #ff3341;
+    --red-dark: #65151c;
+    --red-glow: rgba(227, 38, 50, 0.22);
+
+    /* ChatGPT-like blue */
+    --blue: #2f8cff;
+    --blue-bright: #58a6ff;
+    --blue-dark: #145bb5;
+    --blue-glow: rgba(47, 140, 255, 0.28);
+
+    --green: #35d07f;
+
+    --radius: 18px;
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% -10%, rgba(25, 54, 92, 0.28), transparent 38%),
+        radial-gradient(circle at 100% 50%, rgba(20, 50, 90, 0.10), transparent 35%),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family: "Inter", Arial, sans-serif;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.container {
+    width: min(1100px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 35px 0 60px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    color: var(--white);
+
+    font-size: clamp(28px, 5vw, 44px);
+
+    font-weight: 900;
+
+    letter-spacing: -1.8px;
+
+    line-height: 1.1;
+
+    text-shadow: 0 3px 25px rgba(255, 255, 255, 0.08);
+}
+
+.header p {
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.navigation {
+    display: flex;
+    gap: 8px;
+
+    padding: 7px;
+
+    margin-bottom: 25px;
+
+    overflow-x: auto;
+
+    background: rgba(10, 18, 31, 0.75);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    backdrop-filter: blur(18px);
+}
+
+.nav-button {
+    flex: 1;
+
+    min-width: 100px;
+
+    padding: 12px 18px;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--text-muted);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.nav-button:hover {
+    color: var(--white);
+
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-button.active {
+    color: var(--white);
+
+    background: rgba(30, 65, 110, 0.75);
+
+    border-color: var(--border-strong);
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================================
+   GLASS CARDS
+   ========================================================= */
+
+.card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25, 46, 77, 0.84),
+            rgba(10, 23, 42, 0.78)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    backdrop-filter: blur(20px);
+
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    border-color: var(--border-strong);
+
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+
+/* =========================================================
+   SCORE AREA
+   ========================================================= */
+
+.score-container {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.score-card {
+    padding: 25px;
+
+    text-align: center;
+}
+
+.score-label {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+.score-value {
+    margin-top: 6px;
+
+    color: var(--white);
+
+    font-size: clamp(42px, 8vw, 64px);
+
+    font-weight: 900;
+
+    letter-spacing: -3px;
+
+    line-height: 1;
+}
+
+.score-value span {
+    color: var(--text-muted);
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    letter-spacing: 0;
+}
+
+.points-lost {
+    color: var(--red-bright);
+
+    text-shadow: 0 0 18px var(--red-glow);
+}
+
+
+/* =========================================================
+   SCORE STATUS
+   ========================================================= */
+
+.score-status {
+    margin-top: 12px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   DATE NAVIGATION
+   ========================================================= */
+
+.date-navigation {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+
+    padding: 10px 14px;
+
+    background: rgba(12, 24, 42, 0.7);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    backdrop-filter: blur(15px);
+}
+
+.date-navigation button {
+    width: 42px;
+    height: 38px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: var(--white);
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.date-navigation button:hover {
+    background: rgba(47, 140, 255, 0.15);
+
+    border-color: rgba(47, 140, 255, 0.4);
+
+    color: var(--blue-bright);
+}
+
+.current-date {
+    color: var(--white);
+
+    font-size: 15px;
+
+    font-weight: 900;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SECTION TITLES
+   ========================================================= */
+
+.section-title {
+    margin: 28px 0 14px;
+
+    color: var(--white);
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    letter-spacing: -0.4px;
+}
+
+
+/* =========================================================
+   HABITS GRID
+   ========================================================= */
+
+.habits-list {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.habit {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    min-height: 82px;
+
+    padding: 16px 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 38, 65, 0.82),
+            rgba(10, 23, 42, 0.78)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    backdrop-filter: blur(15px);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.habit:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--border-strong);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25, 47, 79, 0.9),
+            rgba(12, 27, 48, 0.88)
+        );
+}
+
+.habit-info {
+    min-width: 0;
+}
+
+.habit-name {
+    color: var(--white);
+
+    font-size: 15px;
+
+    font-weight: 900;
+
+    letter-spacing: -0.2px;
+}
+
+.habit-description {
+    margin-top: 4px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   PENALTY BUTTON
+   ========================================================= */
+
+.habit-button {
+    flex-shrink: 0;
+
+    min-width: 62px;
+
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.habit-button:hover {
+    border-color: rgba(47, 140, 255, 0.5);
+
+    background: rgba(47, 140, 255, 0.12);
+
+    color: var(--blue-bright);
+}
+
+
+/* =========================================================
+   ACTIVE / PENALTY STATE
+   ========================================================= */
+
+.habit.active {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(75, 18, 25, 0.72),
+            rgba(35, 13, 18, 0.82)
+        );
+
+    border-color: rgba(227, 38, 50, 0.52);
+
+    box-shadow:
+        0 0 25px rgba(227, 38, 50, 0.07),
+        inset 0 1px 0 rgba(255, 100, 100, 0.04);
+}
+
+.habit.active .habit-name {
+    color: #ffffff;
+}
+
+.habit.active .habit-description {
+    color: #c98c91;
+}
+
+.habit.active .habit-button {
+    background: var(--red);
+
+    border-color: var(--red-bright);
+
+    color: white;
+
+    box-shadow:
+        0 0 18px rgba(227, 38, 50, 0.28);
+
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.habit.active .habit-button:hover {
+    background: var(--red-bright);
+
+    color: white;
+}
+
+
+/* =========================================================
+   DAILY NOTE
+   ========================================================= */
+
+.note-container {
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(19, 38, 65, 0.8),
+            rgba(10, 22, 39, 0.78)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    backdrop-filter: blur(18px);
+}
+
+.note-container label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: var(--white);
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+textarea {
+    width: 100%;
+
+    min-height: 120px;
+
+    padding: 14px;
+
+    resize: vertical;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: rgba(4, 10, 18, 0.62);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    transition: 0.2s ease;
+}
+
+textarea::placeholder {
+    color: #697687;
+}
+
+textarea:focus {
+    border-color: rgba(47, 140, 255, 0.65);
+
+    box-shadow:
+        0 0 0 3px rgba(47, 140, 255, 0.1);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button {
+    font-family: inherit;
+}
+
+.primary-button {
+    margin-top: 12px;
+
+    padding: 11px 18px;
+
+    border: 1px solid rgba(47, 140, 255, 0.5);
+
+    border-radius: 10px;
+
+    background: var(--blue);
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 18px var(--blue-glow);
+
+    transition: 0.2s ease;
+}
+
+.primary-button:hover {
+    background: var(--blue-bright);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   RESET BUTTON
+   ========================================================= */
+
+.reset-button {
+    margin-top: 15px;
+
+    padding: 10px 15px;
+
+    border: 1px solid rgba(227, 38, 50, 0.35);
+
+    border-radius: 10px;
+
+    background: rgba(227, 38, 50, 0.08);
+
+    color: #ff7079;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.reset-button:hover {
+    background: rgba(227, 38, 50, 0.17);
+
+    border-color: rgba(227, 38, 50, 0.55);
+}
+
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+
+.progress-container {
+    width: 100%;
+
+    height: 9px;
+
+    margin-top: 10px;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border-radius: 99px;
+}
+
+.progress-bar {
+    height: 100%;
+
+    border-radius: 99px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1677ff,
+            #2f8cff,
+            #58a6ff
+        );
+
+    box-shadow:
+        0 0 14px rgba(47, 140, 255, 0.42);
+
+    transition: width 0.35s ease;
+}
+
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 39, 66, 0.82),
+            rgba(10, 22, 40, 0.78)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    backdrop-filter: blur(15px);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    margin-top: 5px;
+
+    color: var(--white);
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    letter-spacing: -1px;
+}
+
+
+/* =========================================================
+   WEEKLY DAYS
+   ========================================================= */
+
+.weekly-days {
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+
+    gap: 8px;
+}
+
+.day-box {
+    padding: 12px 7px;
+
+    text-align: center;
+
+    background: rgba(16, 31, 53, 0.75);
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+}
+
+.day-name {
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.day-score {
+    margin-top: 5px;
+
+    color: var(--white);
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+.day-score.good {
+    color: var(--blue-bright);
+}
+
+.day-score.bad {
+    color: var(--red-bright);
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+.history-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.history-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 16px 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(19, 37, 63, 0.8),
+            rgba(10, 22, 39, 0.78)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.history-item:hover {
+    border-color: var(--border-strong);
+
+    transform: translateX(2px);
+}
+
+.history-date {
+    color: var(--white);
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.history-score {
+    color: var(--blue-bright);
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+.history-lost {
+    color: var(--red-bright);
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TABLE / BREAKDOWN
+   ========================================================= */
+
+.breakdown {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+.breakdown-item {
+    padding: 14px 16px;
+
+    background: rgba(13, 27, 47, 0.7);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+}
+
+.breakdown-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 7px;
+}
+
+.breakdown-name {
+    color: var(--white);
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+.breakdown-value {
+    color: var(--red-bright);
+
+    font-size: 13px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 45px 20px;
+
+    text-align: center;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    background: rgba(15, 29, 49, 0.5);
+
+    border: 1px dashed var(--border);
+
+    border-radius: var(--radius);
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #263d5a;
+
+    border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #35577e;
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+    background: rgba(47, 140, 255, 0.35);
+
+    color: white;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: min(100% - 20px, 600px);
+
+        padding-top: 22px;
+    }
+
+    .score-container {
+        grid-template-columns: 1fr;
+    }
+
+    .habits-list {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .weekly-days {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .habit {
+        min-height: 76px;
+    }
+
+    .habit-description {
+        font-size: 11px;
+    }
+
+    .navigation {
+        margin-bottom: 18px;
+    }
+
+    .nav-button {
+        min-width: 90px;
+
+        padding: 11px 12px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .container {
+        width: calc(100% - 14px);
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .score-card {
+        padding: 20px 15px;
+    }
+
+    .score-value {
+        font-size: 48px;
+    }
+
+    .habit {
+        padding: 14px;
+    }
+
+    .habit-name {
+        font-size: 14px;
+    }
+
+    .habit-button {
+        min-width: 58px;
+
+        padding: 9px 10px;
+    }
+
+    .weekly-days {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

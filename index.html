@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>50 Point Accountability</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <h1>50 Point Accountability</h1>
+            <p>Every day starts at 50. Protect your points.</p>
+        </header>
+
+
+        <!-- NAVIGATION -->
+        <nav class="navigation">
+
+            <button
+                class="nav-button active"
+                onclick="showPage('today')">
+                Today
+            </button>
+
+            <button
+                class="nav-button"
+                onclick="showPage('weekly')">
+                Weekly
+            </button>
+
+            <button
+                class="nav-button"
+                onclick="showPage('monthly')">
+                Monthly
+            </button>
+
+            <button
+                class="nav-button"
+                onclick="showPage('history')">
+                History
+            </button>
+
+        </nav>
+
+
+        <!-- PAGE CONTENT -->
+        <main id="content"></main>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+        /* =====================================================
+           HABITS
+        ===================================================== */
+
+        const habits = [
+
+            {
+                name: "Scrolling",
+                points: 5,
+                description:
+                    "Uncontrolled Instagram, Shorts or social media scrolling."
+            },
+
+            {
+                name: "Procrastination",
+                points: 5,
+                description:
+                    "Delaying an important task instead of taking action."
+            },
+
+            {
+                name: "Quitting Early",
+                points: 5,
+                description:
+                    "Abandoning a task or project before your planned minimum."
+            },
+
+            {
+                name: "Overplanning",
+                points: 5,
+                description:
+                    "Planning or researching instead of actually starting."
+            },
+
+            {
+                name: "Masturbation",
+                points: 5,
+                description:
+                    "Masturbation during the day."
+            },
+
+            {
+                name: "Sleep Neglect",
+                points: 4,
+                description:
+                    "Sacrificing planned sleep for unnecessary activities."
+            },
+
+            {
+                name: "Entertainment Escape",
+                points: 4,
+                description:
+                    "Using gaming, YouTube or entertainment to escape work."
+            },
+
+            {
+                name: "Networking Avoidance",
+                points: 4,
+                description:
+                    "Avoiding client outreach, networking or career contacts."
+            },
+
+            {
+                name: "Mood Dependence",
+                points: 4,
+                description:
+                    "Skipping useful work mainly because you don't feel like it."
+            },
+
+            {
+                name: "Overthinking",
+                points: 3,
+                description:
+                    "Thinking repeatedly instead of taking the next action."
+            },
+
+            {
+                name: "Comparison",
+                points: 1,
+                description:
+                    "Comparing yourself with others and losing focus."
+            },
+
+            {
+                name: "Prayer Delay",
+                points: 5,
+                description:
+                    "Deliberately delaying prayer because of avoidable distractions."
+            }
+
+        ];
+
+
+        /* =====================================================
+           STORAGE
+        ===================================================== */
+
+        let savedData =
+            JSON.parse(
+                localStorage.getItem("accountabilitySystem")
+            ) || {};
+
+
+        /* =====================================================
+           DATE
+        ===================================================== */
+
+        let selectedDate = getToday();
+
+
+        function getToday() {
+
+            const date = new Date();
+
+            return date.toISOString().split("T")[0];
+
+        }
+
+
+        function formatDate(dateString) {
+
+            const date = new Date(dateString + "T00:00:00");
+
+            return date.toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+        }
+
+
+        function formatShortDate(dateString) {
+
+            const date = new Date(dateString + "T00:00:00");
+
+            return date.toLocaleDateString(
+                "en-US",
+                {
+                    month: "short",
+                    day: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           DAY DATA
+        ===================================================== */
+
+        function getDay(date) {
+
+            if (!savedData[date]) {
+
+                savedData[date] = {
+                    habits: {},
+                    note: ""
+                };
+
+            }
+
+            return savedData[date];
+
+        }
+
+
+        function calculateLost(date) {
+
+            const day = getDay(date);
+
+            let lost = 0;
+
+            habits.forEach(habit => {
+
+                if (day.habits[habit.name]) {
+
+                    lost += habit.points;
+
+                }
+
+            });
+
+            return lost;
+
+        }
+
+
+        function calculateScore(date) {
+
+            return 50 - calculateLost(date);
+
+        }
+
+
+        function saveData() {
+
+            localStorage.setItem(
+                "accountabilitySystem",
+                JSON.stringify(savedData)
+            );
+
+        }
+
+
+        /* =====================================================
+           HABIT TOGGLE
+        ===================================================== */
+
+        function toggleHabit(name) {
+
+            const day = getDay(selectedDate);
+
+            day.habits[name] =
+                !day.habits[name];
+
+            saveData();
+
+            renderToday();
+
+        }
+
+
+        /* =====================================================
+           RESET DAY
+        ===================================================== */
+
+        function resetToday() {
+
+            const confirmed =
+                confirm(
+                    "Reset all habits and notes for this day?"
+                );
+
+            if (!confirmed) return;
+
+            savedData[selectedDate] = {
+                habits: {},
+                note: ""
+            };
+
+            saveData();
+
+            renderToday();
+
+        }
+
+
+        /* =====================================================
+           SAVE NOTE
+        ===================================================== */
+
+        function saveNote() {
+
+            const textarea =
+                document.getElementById("dailyNote");
+
+            const day =
+                getDay(selectedDate);
+
+            day.note = textarea.value;
+
+            saveData();
+
+        }
+
+
+        /* =====================================================
+           PAGE SWITCHING
+        ===================================================== */
+
+        function showPage(page) {
+
+            const buttons =
+                document.querySelectorAll(".nav-button");
+
+            buttons.forEach(button => {
+
+                button.classList.remove("active");
+
+            });
+
+
+            const clickedButton =
+                [...buttons].find(
+                    button =>
+                        button
+                            .getAttribute("onclick")
+                            .includes(`'${page}'`)
+                );
+
+
+            if (clickedButton) {
+
+                clickedButton.classList.add("active");
+
+            }
+
+
+            if (page === "today") {
+
+                renderToday();
+
+            }
+
+            else if (page === "weekly") {
+
+                renderWeekly();
+
+            }
+
+            else if (page === "monthly") {
+
+                renderMonthly();
+
+            }
+
+            else if (page === "history") {
+
+                renderHistory();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           TODAY PAGE
+        ===================================================== */
+
+        function renderToday() {
+
+            const day =
+                getDay(selectedDate);
+
+            const score =
+                calculateScore(selectedDate);
+
+            const lost =
+                calculateLost(selectedDate);
+
+
+            let status = "";
+
+            if (score >= 45) {
+
+                status = "Excellent — stay locked in.";
+
+            }
+
+            else if (score >= 35) {
+
+                status = "Good — tighten things up.";
+
+            }
+
+            else if (score >= 25) {
+
+                status = "Needs correction.";
+
+            }
+
+            else if (score >= 15) {
+
+                status = "Bad day — recover immediately.";
+
+            }
+
+            else {
+
+                status = "Serious reset needed.";
+
+            }
+
+
+            let html = `
+
+                <div class="score-container">
+
+                    <div class="card score-card">
+
+                        <div class="score-label">
+                            Today's Score
+                        </div>
+
+                        <div class="score-value">
+                            ${score}
+                            <span>/50</span>
+                        </div>
+
+                        <div class="score-status">
+                            ${status}
+                        </div>
+
+                    </div>
+
+
+                    <div class="card score-card">
+
+                        <div class="score-label">
+                            Points Lost
+                        </div>
+
+                        <div class="score-value points-lost">
+                            -${lost}
+                        </div>
+
+                        <div class="score-status">
+                            ${lost === 0
+                                ? "Clean so far."
+                                : "These points are gone today."}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="date-navigation">
+
+                    <button onclick="changeDate(-1)">
+                        ‹
+                    </button>
+
+                    <div class="current-date">
+                        ${formatDate(selectedDate)}
+                    </div>
+
+                    <button onclick="changeDate(1)">
+                        ›
+                    </button>
+
+                </div>
+
+
+                <h2 class="section-title">
+                    Daily Accountability
+                </h2>
+
+
+                <div class="habits-list">
+            `;
+
+
+            habits.forEach(habit => {
+
+                const active =
+                    day.habits[habit.name] === true;
+
+
+                html += `
+
+                    <div class="habit ${active ? "active" : ""}">
+
+                        <div class="habit-info">
+
+                            <div class="habit-name">
+                                ${habit.name}
+                            </div>
+
+                            <div class="habit-description">
+                                ${habit.description}
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="habit-button"
+                            onclick="toggleHabit('${habit.name}')">
+
+                            -${habit.points}
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            html += `
+
+                </div>
+
+
+                <div class="note-container">
+
+                    <label for="dailyNote">
+                        Daily Note
+                    </label>
+
+                    <textarea
+                        id="dailyNote"
+                        placeholder="What happened today? What needs to change?"
+                    >${day.note}</textarea>
+
+                    <button
+                        class="primary-button"
+                        onclick="saveNote()">
+
+                        Save Note
+
+                    </button>
+
+                    <br>
+
+                    <button
+                        class="reset-button"
+                        onclick="resetToday()">
+
+                        Reset This Day
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            document.getElementById("content").innerHTML =
+                html;
+
+        }
+
+
+        /* =====================================================
+           CHANGE DATE
+        ===================================================== */
+
+        function changeDate(amount) {
+
+            const date =
+                new Date(
+                    selectedDate + "T00:00:00"
+                );
+
+            date.setDate(
+                date.getDate() + amount
+            );
+
+            selectedDate =
+                date.toISOString()
+                    .split("T")[0];
+
+            renderToday();
+
+        }
+
+
+        /* =====================================================
+           LAST N DAYS
+        ===================================================== */
+
+        function getLastDays(number) {
+
+            const days = [];
+
+            const today =
+                new Date();
+
+            for (
+                let i = 0;
+                i < number;
+                i++
+            ) {
+
+                const date =
+                    new Date(today);
+
+                date.setDate(
+                    today.getDate() - i
+                );
+
+                days.push(
+                    date.toISOString()
+                        .split("T")[0]
+                );
+
+            }
+
+            return days;
+
+        }
+
+
+        /* =====================================================
+           WEEKLY PAGE
+        ===================================================== */
+
+        function renderWeekly() {
+
+            const days =
+                getLastDays(7);
+
+
+            let totalScore = 0;
+
+            let totalLost = 0;
+
+            let trackedDays = 0;
+
+
+            days.forEach(date => {
+
+                const score =
+                    calculateScore(date);
+
+                const day =
+                    savedData[date];
+
+                totalScore += score;
+
+                totalLost +=
+                    calculateLost(date);
+
+                if (day) {
+
+                    trackedDays++;
+
+                }
+
+            });
+
+
+            const average =
+                Math.round(
+                    totalScore / 7
+                );
+
+
+            let html = `
+
+                <h2 class="section-title">
+                    Weekly Overview
+                </h2>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            7-Day Average
+                        </div>
+
+                        <div class="stat-value">
+                            ${average}/50
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Points Lost
+                        </div>
+
+                        <div class="stat-value points-lost">
+                            -${totalLost}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Days Tracked
+                        </div>
+
+                        <div class="stat-value">
+                            ${trackedDays}/7
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <h2 class="section-title">
+                    Last 7 Days
+                </h2>
+
+
+                <div class="weekly-days">
+            `;
+
+
+            days.reverse().forEach(date => {
+
+                const score =
+                    calculateScore(date);
+
+                const day =
+                    new Date(
+                        date + "T00:00:00"
+                    );
+
+
+                const dayName =
+                    day.toLocaleDateString(
+                        "en-US",
+                        {
+                            weekday: "short"
+                        }
+                    );
+
+
+                html += `
+
+                    <div class="day-box">
+
+                        <div class="day-name">
+                            ${dayName}
+                        </div>
+
+                        <div class="day-score ${
+                            score < 35
+                                ? "bad"
+                                : "good"
+                        }">
+
+                            ${score}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            html += `
+
+                </div>
+
+
+                <h2 class="section-title">
+                    Habit Frequency
+                </h2>
+
+
+                <div class="breakdown">
+            `;
+
+
+            habits.forEach(habit => {
+
+                let count = 0;
+
+
+                days.forEach(date => {
+
+                    if (
+                        savedData[date] &&
+                        savedData[date]
+                            .habits[habit.name]
+                    ) {
+
+                        count++;
+
+                    }
+
+                });
+
+
+                const percentage =
+                    Math.round(
+                        (count / 7) * 100
+                    );
+
+
+                html += `
+
+                    <div class="breakdown-item">
+
+                        <div class="breakdown-header">
+
+                            <div class="breakdown-name">
+                                ${habit.name}
+                            </div>
+
+                            <div class="breakdown-value">
+                                ${count}/7
+                            </div>
+
+                        </div>
+
+
+                        <div class="progress-container">
+
+                            <div
+                                class="progress-bar"
+                                style="width: ${percentage}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            html += `
+
+                </div>
+
+            `;
+
+
+            document.getElementById("content").innerHTML =
+                html;
+
+        }
+
+
+        /* =====================================================
+           MONTHLY PAGE
+        ===================================================== */
+
+        function renderMonthly() {
+
+            const days =
+                getLastDays(30);
+
+
+            let totalScore = 0;
+
+            let totalLost = 0;
+
+            let cleanDays = 0;
+
+
+            days.forEach(date => {
+
+                const score =
+                    calculateScore(date);
+
+                totalScore += score;
+
+                totalLost +=
+                    calculateLost(date);
+
+                if (score === 50) {
+
+                    cleanDays++;
+
+                }
+
+            });
+
+
+            const average =
+                Math.round(
+                    totalScore / 30
+                );
+
+
+            let html = `
+
+                <h2 class="section-title">
+                    Monthly Overview
+                </h2>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            30-Day Average
+                        </div>
+
+                        <div class="stat-value">
+                            ${average}/50
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Points Lost
+                        </div>
+
+                        <div class="stat-value points-lost">
+                            -${totalLost}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Clean Days
+                        </div>
+
+                        <div class="stat-value">
+                            ${cleanDays}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <h2 class="section-title">
+                    30-Day Habit Breakdown
+                </h2>
+
+
+                <div class="breakdown">
+            `;
+
+
+            habits.forEach(habit => {
+
+                let count = 0;
+
+
+                days.forEach(date => {
+
+                    if (
+                        savedData[date] &&
+                        savedData[date]
+                            .habits[habit.name]
+                    ) {
+
+                        count++;
+
+                    }
+
+                });
+
+
+                const percentage =
+                    Math.round(
+                        (count / 30) * 100
+                    );
+
+
+                html += `
+
+                    <div class="breakdown-item">
+
+                        <div class="breakdown-header">
+
+                            <div class="breakdown-name">
+                                ${habit.name}
+                            </div>
+
+                            <div class="breakdown-value">
+                                ${count} times
+                            </div>
+
+                        </div>
+
+
+                        <div class="progress-container">
+
+                            <div
+                                class="progress-bar"
+                                style="width: ${percentage}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            html += `
+
+                </div>
+
+            `;
+
+
+            document.getElementById("content").innerHTML =
+                html;
+
+        }
+
+
+        /* =====================================================
+           HISTORY PAGE
+        ===================================================== */
+
+        function renderHistory() {
+
+            const dates =
+                Object.keys(savedData)
+                    .sort()
+                    .reverse();
+
+
+            let html = `
+
+                <h2 class="section-title">
+                    History
+                </h2>
+
+            `;
+
+
+            if (dates.length === 0) {
+
+                html += `
+
+                    <div class="empty-state">
+
+                        No tracked days yet.
+
+                    </div>
+
+                `;
+
+            }
+
+            else {
+
+                html += `
+
+                    <div class="history-list">
+
+                `;
+
+
+                dates.forEach(date => {
+
+                    const score =
+                        calculateScore(date);
+
+                    const lost =
+                        calculateLost(date);
+
+
+                    html += `
+
+                        <div
+                            class="history-item"
+                            onclick="openHistoryDate('${date}')">
+
+                            <div>
+
+                                <div class="history-date">
+                                    ${formatDate(date)}
+                                </div>
+
+                                <div class="history-lost">
+                                    ${lost === 0
+                                        ? "Clean day"
+                                        : `-${lost} points lost`}
+                                </div>
+
+                            </div>
+
+
+                            <div class="history-score">
+                                ${score}/50
+                            </div>
+
+                        </div>
+
+                    `;
+
+                });
+
+
+                html += `
+
+                    </div>
+
+                `;
+
+            }
+
+
+            document.getElementById("content").innerHTML =
+                html;
+
+        }
+
+
+        /* =====================================================
+           OPEN HISTORY DATE
+        ===================================================== */
+
+        function openHistoryDate(date) {
+
+            selectedDate = date;
+
+            showPage("today");
+
+        }
+
+
+        /* =====================================================
+           START APP
+        ===================================================== */
+
+        showPage("today");
+
+    </script>
+
+</body>
+</html>
